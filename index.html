@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.M.B FIND - رهیابی گوشی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #1a237e 0%, #311b92 100%); color: #333; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo-icon { font-size: 40px; font-weight: bold; color: #1a237e; margin-bottom: 10px; }
+        h1 { color: #1a237e; text-align: center; margin-bottom: 10px; }
+        .tagline { text-align: center; color: #666; margin-bottom: 30px; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .form-box { background: #f9f9f9; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        input, button { width: 100%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
+        button { background: #1a237e; color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background: #311b92; }
+        .tracking-code { font-size: 28px; font-weight: bold; color: #1a237e; text-align: center; padding: 20px; background: #f0f0f0; border-radius: 10px; margin: 20px 0; }
+        .success { color: green; text-align: center; font-size: 18px; padding: 15px; background: #e8f5e9; border-radius: 10px; }
+        footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body dir="rtl">
+    <div class="container">
+        <div class="logo">
+            <div class="logo-icon">A.M.B</div>
+            <h1>A.M.B FIND</h1>
+            <p class="tagline">سامانه رهیابی گوشی‌های مفقودی و مسروقه</p>
+        </div>
+
+        <!-- صفحه 1: ثبت IMEI -->
+        <div class="page active" id="page1">
+            <div class="form-box">
+                <h2><i class="fas fa-mobile-alt"></i> ثبت شماره IMEI</h2>
+                <p>شماره IMEI گوشی را وارد کنید (15 رقم):</p>
+                <input type="text" id="imei" placeholder="مثال: 123456789012345" maxlength="15">
+                <button onclick="nextPage()">ادامه <i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+
+        <!-- صفحه 2: اطلاعات شخصی -->
+        <div class="page" id="page2">
+            <div class="form-box">
+                <h2><i class="fas fa-user"></i> اطلاعات متقاضی</h2>
+                <input type="text" id="name" placeholder="نام و نام خانوادگی">
+                <input type="tel" id="phone" placeholder="شماره تماس (09xxxxxxxxx)">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="prevPage()" style="background: #666;"><i class="fas fa-arrow-right"></i> بازگشت</button>
+                    <button onclick="submitForm()">دریافت کد پیگیری</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحه 3: کد پیگیری -->
+        <div class="page" id="page3">
+            <div class="form-box">
+                <h2><i class="fas fa-check-circle"></i> کد پیگیری شما</h2>
+                <div class="tracking-code" id="codeDisplay">AMB-123456</div>
+                <div class="success">
+                    <p><i class="fas fa-info-circle"></i> لوکیشن گوشی و کلانتری نزدیک به گوشی برای شما ارسال می‌گردد.</p>
+                    <p>کد پیگیری خود را یادداشت کنید.</p>
+                </div>
+                <button onclick="restart()"><i class="fas fa-redo"></i> ثبت درخواست جدید</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>A.M.B FIND © 2023 - خدمات رایگان رهیابی</p>
+            <p><i class="fas fa-phone"></i> پشتیبانی: در صورت نیاز تماس بگیرید</p>
+        </footer>
+    </div>
+
+    <script>
+        let trackingCode = "AMB-" + Math.floor(100000 + Math.random() * 900000);
+        
+        function nextPage() {
+            let imei = document.getElementById('imei').value;
+            if(imei.length !== 15) {
+                alert("لطفاً یک شماره IMEI معتبر وارد کنید (۱۵ رقم)");
+                return;
+            }
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+        }
+        
+        function prevPage() {
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
+        }
+        
+        function submitForm() {
+            let name = document.getElementById('name').value;
+            let phone = document.getElementById('phone').value;
+            
+            if(!name || !phone) {
+                alert("لطفاً همه اطلاعات را وارد کنید");
+                return;
+            }
+            
+            document.getElementById('codeDisplay').innerText = trackingCode;
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('page3').classList.add('active');
+            
+            // شبیه‌سازی ارسال پیامک
+            setTimeout(() => {
+                alert("📱 پیامک تأیید به شماره شما ارسال شد!");
+            }, 1000);
+        }
+        
+        function restart() {
+            document.getElementById('imei').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+            trackingCode = "AMB-" + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('page3').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
+        }
+    </script>
+</body>
+</html>
